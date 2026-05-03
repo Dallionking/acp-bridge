@@ -6,7 +6,7 @@ date: 2026-02-22
 
 # ACPX Error Strategy
 
-Permanent machine-facing error contract for `acpx` orchestrators (for example OpenClaw).
+Permanent machine-facing error contract for `acp-bridge` orchestrators.
 
 ## Scope
 

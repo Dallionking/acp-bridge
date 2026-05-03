@@ -71,7 +71,7 @@ References:
 
 - Flow policy: [README.md](./README.md)
 - Flow implementation: [pr-triage.flow.ts](./pr-triage.flow.ts)
-- PR that made this change: [#180](https://github.com/openclaw/acpx/pull/180)
+- PR that made this change: [#180](https://github.com/Dallionking/acp-bridge/pull/180)
 
 ## 2026-03-28: Require explicit write-capable grants
 
@@ -105,7 +105,7 @@ References:
 
 - Flow policy: [README.md](./README.md)
 - Flow implementation: [pr-triage.flow.ts](./pr-triage.flow.ts)
-- PR that made this change: [#186](https://github.com/openclaw/acpx/pull/186)
+- PR that made this change: [#186](https://github.com/Dallionking/acp-bridge/pull/186)
 
 ## 2026-03-28: Let maintenance PRs use standard checks
 
@@ -143,7 +143,7 @@ References:
 
 - Flow policy: [README.md](./README.md)
 - Flow implementation: [pr-triage.flow.ts](./pr-triage.flow.ts)
-- PR that made this change: [#187](https://github.com/openclaw/acpx/pull/187)
+- PR that made this change: [#187](https://github.com/Dallionking/acp-bridge/pull/187)
 
 ## 2026-03-28: Let ACP choose validation plans
 
@@ -181,7 +181,7 @@ References:
 
 - Flow policy: [README.md](./README.md)
 - Flow implementation: [pr-triage.flow.ts](./pr-triage.flow.ts)
-- PR that made this change: [#189](https://github.com/openclaw/acpx/pull/189)
+- PR that made this change: [#189](https://github.com/Dallionking/acp-bridge/pull/189)
 
 ## 2026-03-28: Broaden `judge_refactor`
 
@@ -210,7 +210,7 @@ The old wording was too narrow. It was good at catching code that looked like
 it needed cleanup or a deeper rewrite, but it was weaker at catching small
 extra behavior that should simply be removed before landing.
 
-The concrete example was [#128](https://github.com/openclaw/acpx/pull/128).
+The concrete example was [#128](https://github.com/Dallionking/acp-bridge/pull/128).
 That PR had a real bug fix, but it also added model-alias rewriting that was
 not needed for the fix. The workflow noticed that as a mild concern, but it did
 not push hard enough on the simpler question:
@@ -247,14 +247,14 @@ References:
 - Flow prompt: [pr-triage.flow.ts](./pr-triage.flow.ts)
 - Workflow policy: [README.md](./README.md)
 - Regression test: [../../../test/pr-triage-example.test.ts](../../../test/pr-triage-example.test.ts)
-- Example PR that motivated the change: [#128](https://github.com/openclaw/acpx/pull/128)
-- PR that made this wording change: [#190](https://github.com/openclaw/acpx/pull/190)
+- Example PR that motivated the change: [#128](https://github.com/Dallionking/acp-bridge/pull/128)
+- PR that made this wording change: [#190](https://github.com/Dallionking/acp-bridge/pull/190)
 
 ## 2026-03-29: `#128` follow-up is only partially solved
 
 Observation:
 
-We reran the workflow on [#128](https://github.com/openclaw/acpx/pull/128)
+We reran the workflow on [#128](https://github.com/Dallionking/acp-bridge/pull/128)
 after broadening `judge_refactor`.
 
 That was only a partial success.
@@ -283,7 +283,7 @@ In this case, the workflow still treated the alias behavior as too close to the
 What we are deciding here:
 
 - stop tuning this blindly for now
-- do **not** treat [#128](https://github.com/openclaw/acpx/pull/128) as fully
+- do **not** treat [#128](https://github.com/Dallionking/acp-bridge/pull/128) as fully
   solved from a workflow-policy point of view
 - come back later, reproduce this PR again, and continue tuning from that fresh
   repro
@@ -308,7 +308,7 @@ yet good enough at deciding the exact shape of that change.
 
 References:
 
-- Example PR: [#128](https://github.com/openclaw/acpx/pull/128)
+- Example PR: [#128](https://github.com/Dallionking/acp-bridge/pull/128)
 - Workflow policy: [README.md](./README.md)
 - Flow prompt: [pr-triage.flow.ts](./pr-triage.flow.ts)
-- Current tuning notes PR: [#190](https://github.com/openclaw/acpx/pull/190)
+- Current tuning notes PR: [#190](https://github.com/Dallionking/acp-bridge/pull/190)

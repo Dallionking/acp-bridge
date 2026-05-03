@@ -3,11 +3,11 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 FLOW_FILE="$REPO_ROOT/examples/flows/pr-triage/pr-triage.flow.ts"
-REPO_SLUG="openclaw/acpx"
+REPO_SLUG="Dallionking/acp-bridge"
 STAMP="$(date +%Y%m%dT%H%M%S)"
 TMP_BASE="${TMPDIR:-/tmp}"
 TMP_BASE="${TMP_BASE%/}"
-BATCH_DIR="$TMP_BASE/acpx-pr-triage-batch-$STAMP"
+BATCH_DIR="$TMP_BASE/acp-bridge-pr-triage-batch-$STAMP"
 STARTED_TSV="$BATCH_DIR/started.tsv"
 
 usage() {
@@ -18,7 +18,7 @@ Usage:
 Accepted PR forms:
   178
   #178
-  https://github.com/openclaw/acpx/pull/178
+  https://github.com/Dallionking/acp-bridge/pull/178
 EOF
 }
 

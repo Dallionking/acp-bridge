@@ -429,7 +429,7 @@ test("FlowRunner resolves and persists dynamic run titles", async () => {
       });
 
       const result = await runner.run(flow, {
-        repo: "openclaw/acpx",
+        repo: "Dallionking/acp-bridge",
         prNumber: 128,
       });
       const manifest = JSON.parse(

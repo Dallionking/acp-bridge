@@ -1,13 +1,13 @@
 ---
-title: acpx CLI Reference
-description: Definitive command and behavior reference for the acpx CLI, including grammar, options, session rules, output modes, permissions, and exit codes.
+title: acp-bridge CLI Reference
+description: Definitive command and behavior reference for the acp-bridge CLI, including grammar, options, session rules, output modes, permissions, and exit codes.
 author: Bob <bob@dutifulbob.com>
 date: 2026-02-18
 ---
 
 ## Overview
 
-`acpx` is a headless ACP client for scriptable agent workflows.
+`acp-bridge` is a headless ACP client for scriptable agent workflows.
 
 Default behavior is conversational:
 
@@ -20,25 +20,25 @@ Default behavior is conversational:
 Global options apply to all commands.
 
 ```bash
-acpx [global_options] [prompt_text...]
-acpx [global_options] prompt [prompt_options] [prompt_text...]
-acpx [global_options] exec [prompt_options] [prompt_text...]
-acpx [global_options] flow run <file> [--input-json <json> | --input-file <path>] [--default-agent <name>]
-acpx [global_options] cancel [-s <name>]
-acpx [global_options] set-mode <mode> [-s <name>]
-acpx [global_options] set <key> <value> [-s <name>]
-acpx [global_options] status [-s <name>]
-acpx [global_options] sessions [list | new [--name <name>] | ensure [--name <name>] | close [name] | show [name] | history [name] [--limit <count>]]
-acpx [global_options] config [show | init]
+acp-bridge [global_options] [prompt_text...]
+acp-bridge [global_options] prompt [prompt_options] [prompt_text...]
+acp-bridge [global_options] exec [prompt_options] [prompt_text...]
+acp-bridge [global_options] flow run <file> [--input-json <json> | --input-file <path>] [--default-agent <name>]
+acp-bridge [global_options] cancel [-s <name>]
+acp-bridge [global_options] set-mode <mode> [-s <name>]
+acp-bridge [global_options] set <key> <value> [-s <name>]
+acp-bridge [global_options] status [-s <name>]
+acp-bridge [global_options] sessions [list | new [--name <name>] | ensure [--name <name>] | close [name] | show [name] | history [name] [--limit <count>]]
+acp-bridge [global_options] config [show | init]
 
-acpx [global_options] <agent> [prompt_options] [prompt_text...]
-acpx [global_options] <agent> prompt [prompt_options] [prompt_text...]
-acpx [global_options] <agent> exec [prompt_options] [prompt_text...]
-acpx [global_options] <agent> cancel [-s <name>]
-acpx [global_options] <agent> set-mode <mode> [-s <name>]
-acpx [global_options] <agent> set <key> <value> [-s <name>]
-acpx [global_options] <agent> status [-s <name>]
-acpx [global_options] <agent> sessions [list | new [--name <name>] | ensure [--name <name>] | close [name] | show [name] | history [name] [--limit <count>]]
+acp-bridge [global_options] <agent> [prompt_options] [prompt_text...]
+acp-bridge [global_options] <agent> prompt [prompt_options] [prompt_text...]
+acp-bridge [global_options] <agent> exec [prompt_options] [prompt_text...]
+acp-bridge [global_options] <agent> cancel [-s <name>]
+acp-bridge [global_options] <agent> set-mode <mode> [-s <name>]
+acp-bridge [global_options] <agent> set <key> <value> [-s <name>]
+acp-bridge [global_options] <agent> status [-s <name>]
+acp-bridge [global_options] <agent> sessions [list | new [--name <name>] | ensure [--name <name>] | close [name] | show [name] | history [name] [--limit <count>]]
 ```
 
 `<agent>` can be:
@@ -59,40 +59,40 @@ Prompt options:
 
 Notes:
 
-- Top-level `prompt`, `exec`, `cancel`, `set-mode`, `set`, `sessions`, and bare `acpx <prompt>` default to `codex`.
-- Top-level `flow run <file>` executes a user-authored workflow module and persists run state under `~/.acpx/flows/runs/`.
-- If a prompt argument is omitted, `acpx` reads prompt text from stdin when piped.
+- Top-level `prompt`, `exec`, `cancel`, `set-mode`, `set`, `sessions`, and bare `acp-bridge <prompt>` default to `codex`.
+- Top-level `flow run <file>` executes a user-authored workflow module and persists run state under `~/.acp-bridge/flows/runs/`.
+- If a prompt argument is omitted, `acp-bridge` reads prompt text from stdin when piped.
 - `--file` works for implicit prompt, `prompt`, and `exec` commands.
-- `acpx` with no args in an interactive terminal shows help.
+- `acp-bridge` with no args in an interactive terminal shows help.
 
 ## `flow run` subcommand
 
 ```bash
-acpx [global_options] flow run <file> [--input-json <json> | --input-file <path>] [--default-agent <name>]
+acp-bridge [global_options] flow run <file> [--input-json <json> | --input-file <path>] [--default-agent <name>]
 ```
 
 - Runs a user-authored workflow module step by step through the `acpx/flows` runtime.
-- Persists run artifacts under `~/.acpx/flows/runs/<runId>/`.
+- Persists run artifacts under `~/.acp-bridge/flows/runs/<runId>/`.
 - Reuses one implicit main ACP session by default for non-isolated `acp` nodes.
 - `acp` nodes may override their working directory per step, which lets flows prepare an isolated workspace with an action node and then keep the agent session inside that cwd.
 - `acp` and `action` nodes use the global `--timeout` value as their default step timeout. If `--timeout` is omitted, flows default to 15 minutes per active step.
-- Flows may declare permission requirements. If a flow requires an explicit grant such as `approve-all`, `acpx` fails fast before starting the flow and tells you which permission flag to pass.
+- Flows may declare permission requirements. If a flow requires an explicit grant such as `approve-all`, `acp-bridge` fails fast before starting the flow and tells you which permission flag to pass.
 - `--input-json` passes flow input inline as JSON.
 - `--input-file` reads flow input JSON from disk.
 - `--default-agent` supplies the default agent profile for `acp` nodes that do not pin one.
-- The file is always provided by the caller at runtime. `acpx` does not require any built-in flow registry.
+- The file is always provided by the caller at runtime. `acp-bridge` does not require any built-in flow registry.
 - The source repo includes example flow files under `examples/flows/`, including a larger PR-triage example under `examples/flows/pr-triage/`.
 
 Example invocations:
 
 ```bash
-acpx flow run ./my-flow.ts --input-file ./flow-input.json
+acp-bridge flow run ./my-flow.ts --input-file ./flow-input.json
 
-acpx flow run examples/flows/branch.flow.ts \
+acp-bridge flow run examples/flows/branch.flow.ts \
   --input-json '{"task":"FIX: add a regression test for the reconnect bug"}'
 
-acpx --approve-all flow run examples/flows/pr-triage/pr-triage.flow.ts \
-  --input-json '{"repo":"openclaw/acpx","prNumber":150}'
+acp-bridge --approve-all flow run examples/flows/pr-triage/pr-triage.flow.ts \
+  --input-json '{"repo":"Dallionking/acp-bridge","prNumber":150}'
 ```
 
 The PR-triage example is only an example workflow. It can post GitHub comments
@@ -116,7 +116,7 @@ All global options:
 | `--non-interactive-permissions <policy>` | Non-TTY prompt policy                          | `deny` (default) or `fail` when approval prompt cannot be shown.                                                                                                                                           |
 | `--timeout <seconds>`                    | Max wait time for agent response               | Must be positive. Decimal seconds allowed.                                                                                                                                                                 |
 | `--ttl <seconds>`                        | Queue owner idle TTL before shutdown           | Default `300`. `0` disables TTL.                                                                                                                                                                           |
-| `--model <id>`                           | Set agent model                                | Claude-compatible adapters may consume session creation metadata; other agents must advertise ACP models and support `session/set_model`, otherwise `acpx` fails clearly instead of silently falling back. |
+| `--model <id>`                           | Set agent model                                | Claude-compatible adapters may consume session creation metadata; other agents must advertise ACP models and support `session/set_model`, otherwise `acp-bridge` fails clearly instead of silently falling back. |
 | `--verbose`                              | Enable verbose logs                            | Prints ACP/debug details to stderr.                                                                                                                                                                        |
 
 Permission flags are mutually exclusive. Using more than one of `--approve-all`, `--approve-reads`, `--deny-all` is a usage error.
@@ -124,18 +124,18 @@ Permission flags are mutually exclusive. Using more than one of `--approve-all`,
 ### Global option examples
 
 ```bash
-acpx --approve-all codex 'apply this patch and run tests'
-acpx --approve-reads codex 'inspect the repo and propose a plan'
-acpx --deny-all codex 'summarize this code without running tools'
-acpx --non-interactive-permissions fail codex 'fail fast when prompt cannot be shown'
+acp-bridge --approve-all codex 'apply this patch and run tests'
+acp-bridge --approve-reads codex 'inspect the repo and propose a plan'
+acp-bridge --deny-all codex 'summarize this code without running tools'
+acp-bridge --non-interactive-permissions fail codex 'fail fast when prompt cannot be shown'
 
-acpx --cwd ~/repos/api codex 'review auth middleware'
-acpx --format json codex exec 'summarize open TODO items'
-acpx --format json --json-strict codex exec 'machine-safe JSON output'
-acpx --no-terminal codex exec 'summarize without terminal capability'
-acpx --timeout 120 codex 'investigate flaky test failures'
-acpx --ttl 30 codex 'keep queue owner warm for quick follow-up'
-acpx --verbose codex 'debug adapter startup issues'
+acp-bridge --cwd ~/repos/api codex 'review auth middleware'
+acp-bridge --format json codex exec 'summarize open TODO items'
+acp-bridge --format json --json-strict codex exec 'machine-safe JSON output'
+acp-bridge --no-terminal codex exec 'summarize without terminal capability'
+acp-bridge --timeout 120 codex 'investigate flaky test failures'
+acp-bridge --ttl 30 codex 'keep queue owner warm for quick follow-up'
+acp-bridge --verbose codex 'debug adapter startup issues'
 ```
 
 ## Agent commands
@@ -145,44 +145,21 @@ Each agent command supports the same shape.
 ### `pi`
 
 ```bash
-acpx [global_options] pi [prompt_options] [prompt_text...]
-acpx [global_options] pi prompt [prompt_options] [prompt_text...]
-acpx [global_options] pi exec [prompt_text...]
-acpx [global_options] pi sessions [list | new [--name <name>] | ensure [--name <name>] | close [name]]
+acp-bridge [global_options] pi [prompt_options] [prompt_text...]
+acp-bridge [global_options] pi prompt [prompt_options] [prompt_text...]
+acp-bridge [global_options] pi exec [prompt_text...]
+acp-bridge [global_options] pi sessions [list | new [--name <name>] | ensure [--name <name>] | close [name]]
 ```
 
 Built-in command mapping: `pi -> npx pi-acp`
 
-### `openclaw`
-
-```bash
-acpx [global_options] openclaw [prompt_options] [prompt_text...]
-acpx [global_options] openclaw prompt [prompt_options] [prompt_text...]
-acpx [global_options] openclaw exec [prompt_text...]
-acpx [global_options] openclaw sessions [list | new [--name <name>] | ensure [--name <name>] | close [name]]
-```
-
-Built-in command mapping: `openclaw -> openclaw acp`
-
-For repo-local OpenClaw checkouts, override the built-in command in config:
-
-```json
-{
-  "agents": {
-    "openclaw": {
-      "command": "env OPENCLAW_HIDE_BANNER=1 OPENCLAW_SUPPRESS_NOTES=1 node scripts/run-node.mjs acp --url ws://127.0.0.1:18789 --token-file ~/.openclaw/gateway.token --session agent:main:main"
-    }
-  }
-}
-```
-
 ### `codex`
 
 ```bash
-acpx [global_options] codex [prompt_options] [prompt_text...]
-acpx [global_options] codex prompt [prompt_options] [prompt_text...]
-acpx [global_options] codex exec [prompt_text...]
-acpx [global_options] codex sessions [list | new [--name <name>] | ensure [--name <name>] | close [name]]
+acp-bridge [global_options] codex [prompt_options] [prompt_text...]
+acp-bridge [global_options] codex prompt [prompt_options] [prompt_text...]
+acp-bridge [global_options] codex exec [prompt_text...]
+acp-bridge [global_options] codex sessions [list | new [--name <name>] | ensure [--name <name>] | close [name]]
 ```
 
 Built-in command mapping: `codex -> npx @zed-industries/codex-acp`
@@ -190,10 +167,10 @@ Built-in command mapping: `codex -> npx @zed-industries/codex-acp`
 ### `claude`
 
 ```bash
-acpx [global_options] claude [prompt_options] [prompt_text...]
-acpx [global_options] claude prompt [prompt_options] [prompt_text...]
-acpx [global_options] claude exec [prompt_text...]
-acpx [global_options] claude sessions [list | new [--name <name>] | ensure [--name <name>] | close [name]]
+acp-bridge [global_options] claude [prompt_options] [prompt_text...]
+acp-bridge [global_options] claude prompt [prompt_options] [prompt_text...]
+acp-bridge [global_options] claude exec [prompt_text...]
+acp-bridge [global_options] claude sessions [list | new [--name <name>] | ensure [--name <name>] | close [name]]
 ```
 
 Built-in command mapping: `claude -> npx -y @agentclientprotocol/claude-agent-acp`
@@ -205,9 +182,9 @@ Additional built-in agent docs live in [../agents/README.md](../agents/README.md
 Unknown agent names are treated as raw commands:
 
 ```bash
-acpx [global_options] my-agent [prompt_options] [prompt_text...]
-acpx [global_options] my-agent exec [prompt_text...]
-acpx [global_options] my-agent sessions
+acp-bridge [global_options] my-agent [prompt_options] [prompt_text...]
+acp-bridge [global_options] my-agent exec [prompt_text...]
+acp-bridge [global_options] my-agent sessions
 ```
 
 ## `prompt` subcommand (explicit)
@@ -215,8 +192,8 @@ acpx [global_options] my-agent sessions
 Persistent-session prompt command:
 
 ```bash
-acpx [global_options] <agent> prompt [prompt_options] [prompt_text...]
-acpx [global_options] prompt [prompt_options] [prompt_text...]
+acp-bridge [global_options] <agent> prompt [prompt_options] [prompt_text...]
+acp-bridge [global_options] prompt [prompt_options] [prompt_text...]
 ```
 
 Behavior:
@@ -231,8 +208,8 @@ Behavior:
 The agent command itself also has an implicit prompt form:
 
 ```bash
-acpx [global_options] <agent> [prompt_options] [prompt_text...]
-acpx [global_options] [prompt_text...]   # defaults to codex
+acp-bridge [global_options] <agent> [prompt_options] [prompt_text...]
+acp-bridge [global_options] [prompt_text...]   # defaults to codex
 ```
 
 ## `exec` subcommand
@@ -240,8 +217,8 @@ acpx [global_options] [prompt_text...]   # defaults to codex
 One-shot prompt (no saved session):
 
 ```bash
-acpx [global_options] <agent> exec [prompt_options] [prompt_text...]
-acpx [global_options] exec [prompt_options] [prompt_text...]   # defaults to codex
+acp-bridge [global_options] <agent> exec [prompt_options] [prompt_text...]
+acp-bridge [global_options] exec [prompt_options] [prompt_text...]   # defaults to codex
 ```
 
 Behavior:
@@ -254,8 +231,8 @@ Behavior:
 ## `cancel` command
 
 ```bash
-acpx [global_options] <agent> cancel [-s <name>]
-acpx [global_options] cancel [-s <name>]   # defaults to codex
+acp-bridge [global_options] <agent> cancel [-s <name>]
+acp-bridge [global_options] cancel [-s <name>]   # defaults to codex
 ```
 
 Behavior:
@@ -266,8 +243,8 @@ Behavior:
 ## `set-mode` command
 
 ```bash
-acpx [global_options] <agent> set-mode <mode> [-s <name>]
-acpx [global_options] set-mode <mode> [-s <name>]   # defaults to codex
+acp-bridge [global_options] <agent> set-mode <mode> [-s <name>]
+acp-bridge [global_options] set-mode <mode> [-s <name>]   # defaults to codex
 ```
 
 Behavior:
@@ -281,8 +258,8 @@ Behavior:
 ## `set` command
 
 ```bash
-acpx [global_options] <agent> set <key> <value> [-s <name>]
-acpx [global_options] set <key> <value> [-s <name>]   # defaults to codex
+acp-bridge [global_options] <agent> set <key> <value> [-s <name>]
+acp-bridge [global_options] set <key> <value> [-s <name>]   # defaults to codex
 ```
 
 Behavior:
@@ -295,21 +272,21 @@ Behavior:
 ## `sessions` subcommand
 
 ```bash
-acpx [global_options] <agent> sessions
-acpx [global_options] <agent> sessions list
-acpx [global_options] <agent> sessions new
-acpx [global_options] <agent> sessions new --name <name>
-acpx [global_options] <agent> sessions ensure
-acpx [global_options] <agent> sessions ensure --name <name>
-acpx [global_options] <agent> sessions close
-acpx [global_options] <agent> sessions close <name>
-acpx [global_options] <agent> sessions show
-acpx [global_options] <agent> sessions show <name>
-acpx [global_options] <agent> sessions history
-acpx [global_options] <agent> sessions history <name> [--limit <count>]
-acpx [global_options] <agent> sessions prune [--dry-run] [--before <date> | --older-than <days>] [--include-history]
+acp-bridge [global_options] <agent> sessions
+acp-bridge [global_options] <agent> sessions list
+acp-bridge [global_options] <agent> sessions new
+acp-bridge [global_options] <agent> sessions new --name <name>
+acp-bridge [global_options] <agent> sessions ensure
+acp-bridge [global_options] <agent> sessions ensure --name <name>
+acp-bridge [global_options] <agent> sessions close
+acp-bridge [global_options] <agent> sessions close <name>
+acp-bridge [global_options] <agent> sessions show
+acp-bridge [global_options] <agent> sessions show <name>
+acp-bridge [global_options] <agent> sessions history
+acp-bridge [global_options] <agent> sessions history <name> [--limit <count>]
+acp-bridge [global_options] <agent> sessions prune [--dry-run] [--before <date> | --older-than <days>] [--include-history]
 
-acpx [global_options] sessions ...   # defaults to codex
+acp-bridge [global_options] sessions ...   # defaults to codex
 ```
 
 Behavior:
@@ -335,10 +312,10 @@ Behavior:
 ## `status` command
 
 ```bash
-acpx [global_options] <agent> status
-acpx [global_options] <agent> status -s <name>
-acpx [global_options] status
-acpx [global_options] status -s <name>
+acp-bridge [global_options] <agent> status
+acp-bridge [global_options] <agent> status -s <name>
+acp-bridge [global_options] status
+acp-bridge [global_options] status -s <name>
 ```
 
 Shows local process status for the cwd-scoped session:
@@ -358,8 +335,8 @@ Status checks are local and PID-based (`kill(pid, 0)` semantics).
 ## `config` command
 
 ```bash
-acpx [global_options] config show
-acpx [global_options] config init
+acp-bridge [global_options] config show
+acp-bridge [global_options] config init
 ```
 
 - `config show` prints the resolved config from global + project files.
@@ -367,7 +344,7 @@ acpx [global_options] config init
 
 Config files:
 
-- global: `~/.acpx/config.json`
+- global: `~/.acp-bridge/config.json`
 - project: `<cwd>/.acpxrc.json` (merged on top of global)
 
 Supported keys:
@@ -404,8 +381,8 @@ child agents, but they do not trigger ACP auth-method selection on their own.
 Examples:
 
 ```bash
-acpx --agent ./my-custom-acp-server 'do something'
-acpx --agent 'node ./scripts/acp-dev-server.mjs --mode ci' exec 'summarize changes'
+acp-bridge --agent ./my-custom-acp-server 'do something'
+acp-bridge --agent 'node ./scripts/acp-dev-server.mjs --mode ci' exec 'summarize changes'
 ```
 
 Rules:
@@ -419,7 +396,7 @@ Rules:
 Session records are stored in:
 
 ```text
-~/.acpx/sessions/*.json
+~/.acp-bridge/sessions/*.json
 ```
 
 ### Auto-resume
@@ -436,18 +413,18 @@ For prompt commands:
 Use `sessions new [--name <name>]` when you explicitly want a fresh scoped session.
 Use `sessions ensure [--name <name>]` when you want idempotent "get-or-create" behavior.
 
-If a saved session PID is dead, `acpx` respawns the agent, tries `session/load`, and transparently falls back to `session/new` when loading fails.
+If a saved session PID is dead, `acp-bridge` respawns the agent, tries `session/load`, and transparently falls back to `session/new` when loading fails.
 
 ### Prompt queueing
 
-When a prompt is already in flight for a session, `acpx` uses a per-session queue owner process:
+When a prompt is already in flight for a session, `acp-bridge` uses a per-session queue owner process:
 
 1. owner process keeps the active turn running
-2. other `acpx` invocations enqueue prompts through local IPC
+2. other `acp-bridge` invocations enqueue prompts through local IPC
 3. owner drains queued prompts one-by-one after each completed turn
 4. after the queue drains, owner waits for new work up to TTL (`--ttl`, default 300s)
 5. submitter either blocks until completion (default) or exits immediately with `--no-wait`
-6. if interrupted (`Ctrl+C`) during an active turn, `acpx` sends `session/cancel` first, waits briefly for cancelled completion, then force-kills only if needed
+6. if interrupted (`Ctrl+C`) during an active turn, `acp-bridge` sends `session/cancel` first, waits briefly for cancelled completion, then force-kills only if needed
 
 ### Soft-close behavior
 
@@ -552,52 +529,52 @@ Non-interactive prompt policy:
 
 ## Environment variables
 
-No `acpx`-specific environment variables are currently defined.
+No `acp-bridge`-specific environment variables are currently defined.
 
 Related runtime behavior:
 
-- session storage path is derived from OS home directory (`~/.acpx/sessions`)
+- session storage path is derived from OS home directory (`~/.acp-bridge/sessions`)
 - child processes inherit the current environment by default
 
 ## Practical examples
 
 ```bash
 # Review a PR in a dedicated named session
-acpx --cwd ~/repos/shop codex sessions new --name pr-842
-acpx --cwd ~/repos/shop codex -s pr-842 \
+acp-bridge --cwd ~/repos/shop codex sessions new --name pr-842
+acp-bridge --cwd ~/repos/shop codex -s pr-842 \
   'Review PR #842, list risks, and propose a minimal patch'
 
 # Continue that same PR review later
-acpx --cwd ~/repos/shop codex -s pr-842 \
+acp-bridge --cwd ~/repos/shop codex -s pr-842 \
   'Now draft commit message and rollout checklist'
 
 # Parallel workstreams in one repo
-acpx codex sessions new --name backend
-acpx codex sessions new --name docs
-acpx codex -s backend 'fix checkout timeout'
-acpx codex -s docs 'document payment retry behavior'
+acp-bridge codex sessions new --name backend
+acp-bridge codex sessions new --name docs
+acp-bridge codex -s backend 'fix checkout timeout'
+acp-bridge codex -s docs 'document payment retry behavior'
 
 # One-shot ask with no saved context
-acpx claude exec 'summarize src/session.ts in 5 bullets'
+acp-bridge claude exec 'summarize src/session.ts in 5 bullets'
 
 # Manage sessions
-acpx codex sessions
-acpx codex sessions new --name docs
-acpx codex sessions show docs
-acpx codex sessions history docs --limit 10
-acpx codex sessions close docs
-acpx codex status
+acp-bridge codex sessions
+acp-bridge codex sessions new --name docs
+acp-bridge codex sessions show docs
+acp-bridge codex sessions history docs --limit 10
+acp-bridge codex sessions close docs
+acp-bridge codex status
 
 # Prompt from file/stdin
-echo 'triage failing tests' | acpx codex
-acpx codex --file prompt.md
-acpx codex --file - 'also check lint warnings'
+echo 'triage failing tests' | acp-bridge codex
+acp-bridge codex --file prompt.md
+acp-bridge codex --file - 'also check lint warnings'
 
 # Config inspection
-acpx config show
-acpx config init
+acp-bridge config show
+acp-bridge config init
 
 # JSON automation pipeline
-acpx --format json codex exec 'review latest diff for security issues' \
+acp-bridge --format json codex exec 'review latest diff for security issues' \
   | jq -r 'select(.type=="tool_call") | [.status, .title] | @tsv'
 ```

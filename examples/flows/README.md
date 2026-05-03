@@ -27,7 +27,7 @@ acpx flow run examples/flows/branch.flow.ts \
   --input-json '{"task":"FIX: add a regression test for the reconnect bug"}'
 
 acpx --approve-all flow run examples/flows/pr-triage/pr-triage.flow.ts \
-  --input-json '{"repo":"openclaw/acpx","prNumber":150}'
+  --input-json '{"repo":"Dallionking/acp-bridge","prNumber":150}'
 
 acpx flow run examples/flows/shell.flow.ts \
   --input-json '{"text":"hello from shell"}'

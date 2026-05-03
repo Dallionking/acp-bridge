@@ -134,21 +134,21 @@ Notes:
    - fallback/reconnect flows still work when `acpxSessionId` changes and `acpxRecordId` remains stable.
    - behavior remains correct when `agentSessionId` is absent.
 
-## OpenClaw Integration Impact
+## Embedding Consumer Impact
 
-OpenClaw should consume:
+Embedding applications should consume:
 
-- `acpxRecordId` as backend/local acpx identity
-- `acpxSessionId` as ACP wire/session identity
+- `acpBridgeRecordId` as backend/local acp-bridge identity
+- `acpBridgeSessionId` as ACP wire/session identity
 - `agentSessionId` as inner harness identity when present
 
 If `agentSessionId` is absent, UX should avoid implying a distinct inner session id.
 
 ## Rollout
 
-1. Implement canonical naming in acpx internals and JSON outputs.
+1. Implement canonical naming in acp-bridge internals and JSON outputs.
 2. Add legacy-read compatibility for existing session files.
-3. Update OpenClaw acpx runtime parser to read canonical fields.
+3. Update any runtime parser to read canonical fields.
 4. Remove legacy field usage from tests/docs after transition is complete.
 
 ## Risks

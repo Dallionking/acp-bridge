@@ -10,7 +10,6 @@ date: 2026-02-17
 `src/agent-registry.ts` defines friendly names such as:
 
 - `pi -> npx pi-acp`
-- `openclaw -> openclaw acp`
 - `codex -> npx @zed-industries/codex-acp`
 - `claude -> npx -y @agentclientprotocol/claude-agent-acp`
 
@@ -53,6 +52,6 @@ Use the built-ins documented in `src/agent-registry.ts`. For the full supported-
 Use `--agent` when you need:
 
 - local development adapters
-- repo-local OpenClaw bridge commands such as `pnpm openclaw acp --session agent:main:main`
+- repo-local ACP bridge commands
 - pinned binaries/scripts
 - non-standard ACP servers

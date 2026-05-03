@@ -1,7 +1,7 @@
 ---
 title: acpx Flow Trace And Replay
 description: Trace bundle layout, event model, and replay data requirements for acpx flow runs.
-author: OpenClaw Team <dev@openclaw.ai>
+author: acp-bridge contributors
 date: 2026-03-26
 ---
 

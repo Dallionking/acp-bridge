@@ -1,5 +1,5 @@
 {
-  "name": "acpx",
+  "name": "acp-bridge",
   "version": "0.6.1",
   "description": "Headless CLI client for the Agent Client Protocol (ACP) — talk to coding agents from the command line",
   "keywords": [
@@ -12,19 +12,24 @@
     "coding-agent"
   ],
   "license": "MIT",
-  "author": "OpenClaw Team <dev@openclaw.ai>",
+  "author": "Dallion King <dev@goldencirclecom.com>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openclaw/acpx.git"
+    "url": "git+https://github.com/Dallionking/acp-bridge.git"
   },
+  "bugs": {
+    "url": "https://github.com/Dallionking/acp-bridge/issues"
+  },
+  "homepage": "https://github.com/Dallionking/acp-bridge#readme",
   "bin": {
-    "acpx": "dist/cli.js"
+    "acp-bridge": "dist/cli.js"
   },
   "files": [
     "dist",
     "skills",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "ATTRIBUTION.md"
   ],
   "type": "module",
   "exports": {

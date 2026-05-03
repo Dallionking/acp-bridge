@@ -52,16 +52,15 @@ test("kiro built-in uses kiro-cli-chat directly", () => {
 test("listBuiltInAgents preserves the required example prefix and alphabetical tail", () => {
   const agents = listBuiltInAgents();
   assert.deepEqual(agents, Object.keys(AGENT_REGISTRY));
-  assert.deepEqual(agents.slice(0, 7), [
+  assert.deepEqual(agents.slice(0, 6), [
     "pi",
-    "openclaw",
     "codex",
     "claude",
     "gemini",
     "cursor",
     "copilot",
   ]);
-  assert.deepEqual(agents.slice(7), [
+  assert.deepEqual(agents.slice(6), [
     "droid",
     "iflow",
     "kilocode",
@@ -90,7 +89,7 @@ test("npm-backed built-ins use current adapter package ranges", () => {
 });
 
 test("resolveInstalledBuiltInAgentLaunch uses a locally installed adapter when available", (t) => {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "acpx-agent-registry-"));
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "acp-bridge-agent-registry-"));
   t.after(() => {
     fs.rmSync(tempDir, { recursive: true, force: true });
   });
@@ -136,7 +135,7 @@ test("resolveInstalledBuiltInAgentLaunch ignores non-built-in commands", () => {
 });
 
 test("resolvePackageExecBuiltInAgentLaunch bridges built-ins through the current Node npm CLI", () => {
-  const npmCliPath = path.join(os.tmpdir(), "acpx-test-npm-cli.js");
+  const npmCliPath = path.join(os.tmpdir(), "acp-bridge-test-npm-cli.js");
   const launch = resolvePackageExecBuiltInAgentLaunch(AGENT_REGISTRY.codex, {
     execPath: "/tmp/node",
     existsSync: (candidate) => candidate === npmCliPath,
@@ -161,7 +160,7 @@ test("resolvePackageExecBuiltInAgentLaunch bridges built-ins through the current
 });
 
 test("resolveBuiltInAgentLaunch accepts the legacy Claude npm exec default", () => {
-  const npmCliPath = path.join(os.tmpdir(), "acpx-test-claude-npm-cli.js");
+  const npmCliPath = path.join(os.tmpdir(), "acp-bridge-test-claude-npm-cli.js");
   const launch = resolveBuiltInAgentLaunch(
     `npm exec @agentclientprotocol/claude-agent-acp@${BUILT_IN_AGENT_PACKAGES.claude.packageRange}`,
     {

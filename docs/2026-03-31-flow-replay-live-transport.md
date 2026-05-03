@@ -1,7 +1,7 @@
 ---
 title: Flow Replay Live Transport
 description: Real-time viewer transport and state-sync model for in-progress flow runs.
-author: OpenClaw Team <dev@openclaw.ai>
+author: acp-bridge contributors
 date: 2026-03-31
 ---
 

@@ -47,8 +47,7 @@ jobs:
           const { readFileSync } = require("node:fs");
 
           const pkg = JSON.parse(readFileSync("package.json", "utf8"));
-          const expectedAuthor = "OpenClaw Team <dev@openclaw.ai>";
-          const expectedRepoUrl = "https://github.com/openclaw/acpx";
+          const expectedRepoUrl = "https://github.com/Dallionking/acp-bridge";
 
           const normalizeRepoUrl = (value) =>
             String(value ?? "")
@@ -63,12 +62,13 @@ jobs:
           const errors = [];
           if (actualRepoUrl !== expectedRepoUrlNormalized) {
             errors.push(
-              `package.json repository.url must resolve to ${expectedRepoUrlNormalized}; found ${actualRepoUrl || "<missing>"}`
+              "package.json repository.url must resolve to " + expectedRepoUrlNormalized +
+              "; found " + (actualRepoUrl || "<missing>")
             );
           }
-          if ((pkg?.author ?? "") !== expectedAuthor) {
+          if ((pkg?.name ?? "") !== "acp-bridge") {
             errors.push(
-              `package.json author must be exactly "${expectedAuthor}"; found "${pkg?.author ?? ""}"`
+              'package.json name must be "acp-bridge"; found "' + (pkg?.name ?? "") + '"'
             );
           }
 
@@ -100,17 +100,18 @@ jobs:
 
           if (!semverTag.test(releaseTag)) {
             console.error(
-              `Release tags must match vX.Y.Z; received ${releaseTag || "<missing>"}.`
+              "Release tags must match vX.Y.Z; received " + (releaseTag || "<missing>") + "."
             );
             process.exit(1);
           }
 
           const pkg = JSON.parse(readFileSync("package.json", "utf8"));
-          const expectedTag = `v${pkg.version}`;
+          const expectedTag = "v" + pkg.version;
 
           if (releaseTag !== expectedTag) {
             console.error(
-              `Release tag ${releaseTag} does not match package.json version ${pkg.version}; expected ${expectedTag}.`
+              "Release tag " + releaseTag + " does not match package.json version " +
+              pkg.version + "; expected " + expectedTag + "."
             );
             process.exit(1);
           }
@@ -123,13 +124,13 @@ jobs:
             );
           } catch {
             console.error(
-              `Tagged commit ${releaseSha} is not contained in origin/main.`
+              "Tagged commit " + releaseSha + " is not contained in origin/main."
             );
             process.exit(1);
           }
 
           console.log(
-            `Release tag ${releaseTag} matches package.json and points to a commit on origin/main.`
+            "Release tag " + releaseTag + " matches package.json and points to a commit on origin/main."
           );
           NODE
 
@@ -137,14 +138,14 @@ jobs:
         run: |
           set -euo pipefail
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          PUBLISHED_VERSION=$(npm view acpx version 2>/dev/null || true)
+          PUBLISHED_VERSION=$(npm view acp-bridge version 2>/dev/null || true)
 
           if [ "$PUBLISHED_VERSION" = "$PACKAGE_VERSION" ]; then
-            echo "acpx@$PACKAGE_VERSION is already published on npm."
+            echo "acp-bridge@$PACKAGE_VERSION is already published on npm."
             exit 1
           fi
 
-          echo "Publishing acpx@$PACKAGE_VERSION"
+          echo "Publishing acp-bridge@$PACKAGE_VERSION"
 
       - run: pnpm run lint
       - run: pnpm run typecheck

@@ -3,7 +3,6 @@
 Built-in agents:
 
 - `pi -> npx pi-acp`
-- `openclaw -> openclaw acp`
 - `codex -> npx @zed-industries/codex-acp`
 - `claude -> npx -y @agentclientprotocol/claude-agent-acp`
 - `gemini -> gemini --acp`

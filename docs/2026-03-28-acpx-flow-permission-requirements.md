@@ -1,7 +1,7 @@
 ---
 title: acpx Flow Permission Requirements
 description: Explicit permission-grant model for powerful flows that need write-capable ACP sessions.
-author: OpenClaw Team <dev@openclaw.ai>
+author: acp-bridge contributors
 date: 2026-03-28
 ---
 
@@ -158,7 +158,7 @@ Conceptually:
 ```json
 {
   "flowPermissionGrants": {
-    "openclaw/pr-triage": {
+    "Dallionking/pr-triage": {
       "mode": "approve-all"
     }
   }

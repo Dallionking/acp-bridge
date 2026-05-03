@@ -1,7 +1,7 @@
 ---
 title: acpx Flows Architecture
 description: Execution model, runtime boundary, and design principles for acpx flows.
-author: OpenClaw Team <dev@openclaw.ai>
+author: acp-bridge contributors
 date: 2026-03-25
 ---
 

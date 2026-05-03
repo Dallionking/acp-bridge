@@ -41,14 +41,14 @@ function resolveVersionFromAncestors(startDir: string): string | null {
   }
 }
 
-export function resolveAcpxVersion(params?: {
+export function resolveAcpBridgeVersion(params?: {
   env?: NodeJS.ProcessEnv;
   packageJsonPath?: string;
 }): string {
   const env = params?.env ?? process.env;
   const envPackageName = parseVersion(env.npm_package_name);
   const envVersion = parseVersion(env.npm_package_version);
-  if (envPackageName === "acpx" && envVersion) {
+  if (envPackageName === "acp-bridge" && envVersion) {
     return envVersion;
   }
 
@@ -59,10 +59,14 @@ export function resolveAcpxVersion(params?: {
   return resolveVersionFromAncestors(MODULE_DIR) ?? UNKNOWN_VERSION;
 }
 
-export function getAcpxVersion(): string {
+export function getAcpBridgeVersion(): string {
   if (cachedVersion) {
     return cachedVersion;
   }
-  cachedVersion = resolveAcpxVersion();
+  cachedVersion = resolveAcpBridgeVersion();
   return cachedVersion;
 }
+
+// Legacy aliases — keeps existing callers compiling without a breaking rename
+export const resolveAcpxVersion = resolveAcpBridgeVersion;
+export const getAcpxVersion = getAcpBridgeVersion;

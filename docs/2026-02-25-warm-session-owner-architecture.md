@@ -59,18 +59,18 @@ Consequence:
 - queueing, cancel, set-mode, set-config behave identically from CLI and orchestrators.
 - predictable timeouts and explicit error codes.
 
-## OpenClaw-specific expectations
+## Embedding application expectations
 
-For OpenClaw ACP runtime usage, detached warm owners must provide:
+For embedding applications using the ACP runtime, detached warm owners must provide:
 
 1. Fast thread turn handling
 
-- thread message -> enqueue prompt -> stream output -> complete response
+- message -> enqueue prompt -> stream output -> complete response
 - no hidden 300s wait in gateway-facing process paths
 
 2. Stable session affinity
 
-- one OpenClaw ACP session maps to one `acpx` owner target at a time
+- one ACP session maps to one `acp-bridge` owner target at a time
 - follow-up turns reliably route to same warm owner until close/reset
 
 3. Safe concurrent thread load
@@ -80,7 +80,7 @@ For OpenClaw ACP runtime usage, detached warm owners must provide:
 
 4. Recovery after restart/crash
 
-- OpenClaw can reconnect to existing warm owner if alive
+- embedding application can reconnect to existing warm owner if alive
 - otherwise it can recreate owner without manual intervention
 
 ## Non-goals

@@ -60,26 +60,25 @@ export function configurePublicCli(options: ConfigurePublicCliOptions): void {
     "after",
     `
 Examples:
-  acpx pi "review recent changes"
-  acpx openclaw exec "summarize active session state"
-  acpx codex sessions new
-  acpx codex "fix the tests"
-  acpx codex prompt "fix the tests"
-  acpx codex --no-wait "queue follow-up task"
-  acpx codex exec "what does this repo do"
-  acpx codex cancel
-  acpx codex set-mode plan
-  acpx codex set thought_level high
-  acpx codex -s backend "fix the API"
-  acpx codex sessions
-  acpx codex sessions new --name backend
-  acpx codex sessions ensure --name backend
-  acpx codex sessions close backend
-  acpx codex status
-  acpx config show
-  acpx config init
-  acpx --ttl 30 codex "investigate flaky tests"
-  acpx claude "refactor auth"
-  acpx --agent ./my-custom-server "do something"`,
+  acp-bridge pi "review recent changes"
+  acp-bridge codex sessions new
+  acp-bridge codex "fix the tests"
+  acp-bridge codex prompt "fix the tests"
+  acp-bridge codex --no-wait "queue follow-up task"
+  acp-bridge codex exec "what does this repo do"
+  acp-bridge codex cancel
+  acp-bridge codex set-mode plan
+  acp-bridge codex set thought_level high
+  acp-bridge codex -s backend "fix the API"
+  acp-bridge codex sessions
+  acp-bridge codex sessions new --name backend
+  acp-bridge codex sessions ensure --name backend
+  acp-bridge codex sessions close backend
+  acp-bridge codex status
+  acp-bridge config show
+  acp-bridge config init
+  acp-bridge --ttl 30 codex "investigate flaky tests"
+  acp-bridge claude "refactor auth"
+  acp-bridge --agent ./my-custom-server "do something"`,
   );
 }
