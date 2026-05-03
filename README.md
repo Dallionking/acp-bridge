@@ -10,7 +10,7 @@
 
 > ACP coverage status: see [ACP Spec Coverage Roadmap](docs/2026-02-19-acp-coverage-roadmap.md).
 
-`acp-bridge` is a headless CLI client for the [Agent Client Protocol (ACP)](https://agentclientprotocol.com), so AI agents and orchestrators can talk to coding agents over a structured protocol instead of PTY scraping.
+`acp-bridge` is a headless CLI client for the [Agent Client Protocol (ACP)](https://agentclientprotocol.com), so AI agents and callers can talk to coding agents over a structured protocol instead of PTY scraping.
 
 One command surface for Codex, Claude, Pi, and other ACP-compatible agents. Built for agent-to-agent communication over the command line.
 
@@ -68,7 +68,7 @@ reading stale state from the previous run.
 
 ## Quick setup — tell your agent about acp-bridge
 
-Copy the block below and paste it into your Claude Code, Codex, or similar agent harness. It will install acp-bridge, read the skill reference, and know how to use ACP for all future coding agent tasks.
+Copy the block below and paste it into your AI agent (Claude Code, Codex, etc.). It will install acp-bridge, read the skill reference, and know how to use ACP for all future coding agent tasks.
 
 ```text
 I want you to use acp-bridge to run coding agents over the Agent Client Protocol
@@ -160,7 +160,7 @@ acp-bridge config show                 # show resolved config (global + project)
 acp-bridge config init                 # create ~/.acp-bridge/config.json template
 ```
 
-Main landing harness examples:
+Main landing agent examples:
 
 ```bash
 acp-bridge pi 'review recent changes'
@@ -168,7 +168,7 @@ acp-bridge codex 'fix the failing typecheck'
 acp-bridge claude 'refactor auth middleware'
 ```
 
-Additional supported harnesses and their specific notes are documented in [agents/README.md](agents/README.md).
+Additional supported agents and their specific notes are documented in [agents/README.md](agents/README.md).
 
 ```bash
 acp-bridge my-agent 'review this patch'                      # unknown name -> raw command
