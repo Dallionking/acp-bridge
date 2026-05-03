@@ -1,0 +1,182 @@
+import { Command } from "commander";
+import { findSession } from "../session/persistence.js";
+import type { ResolvedAcpBridgeConfig } from "./config.js";
+import {
+  addSessionNameOption,
+  resolveAgentInvocation,
+  resolveGlobalFlags,
+  resolveSessionNameFromFlags,
+  type StatusFlags,
+} from "./flags.js";
+import { emitJsonResult } from "./output/json-output.js";
+import { agentSessionIdPayload } from "./output/render.js";
+import { probeQueueOwnerHealth } from "./queue/ipc.js";
+
+type SessionStatusState = "running" | "idle" | "dead";
+
+function formatUptime(startedAt: string | undefined): string | undefined {
+  if (!startedAt) {
+    return undefined;
+  }
+
+  const startedMs = Date.parse(startedAt);
+  if (!Number.isFinite(startedMs)) {
+    return undefined;
+  }
+
+  const elapsedMs = Math.max(0, Date.now() - startedMs);
+  const seconds = Math.floor(elapsedMs / 1_000);
+  const hours = Math.floor(seconds / 3_600);
+  const minutes = Math.floor((seconds % 3_600) / 60);
+  const remSeconds = seconds % 60;
+  return `${hours.toString().padStart(2, "0")}:${minutes
+    .toString()
+    .padStart(2, "0")}:${remSeconds.toString().padStart(2, "0")}`;
+}
+
+function resolveStatusState(
+  record: { lastAgentExitCode?: number | null; lastAgentExitSignal?: NodeJS.Signals | null },
+  health: Awaited<ReturnType<typeof probeQueueOwnerHealth>>,
+): SessionStatusState {
+  if (health.healthy) {
+    return "running";
+  }
+
+  if (health.hasLease) {
+    return "dead";
+  }
+
+  if (record.lastAgentExitSignal || (record.lastAgentExitCode ?? 0) !== 0) {
+    return "dead";
+  }
+
+  return "idle";
+}
+
+function statusSummary(state: SessionStatusState): string {
+  switch (state) {
+    case "running":
+      return "queue owner healthy";
+    case "idle":
+      return "session idle; queue owner will start on next prompt";
+    case "dead":
+      return "queue owner unavailable";
+  }
+  return "queue owner unavailable";
+}
+
+export async function handleStatus(
+  explicitAgentName: string | undefined,
+  flags: StatusFlags,
+  command: Command,
+  config: ResolvedAcpBridgeConfig,
+): Promise<void> {
+  const globalFlags = resolveGlobalFlags(command, config);
+  const agent = resolveAgentInvocation(explicitAgentName, globalFlags, config);
+  const record = await findSession({
+    agentCommand: agent.agentCommand,
+    cwd: agent.cwd,
+    name: resolveSessionNameFromFlags(flags, command),
+  });
+
+  if (!record) {
+    if (
+      emitJsonResult(globalFlags.format, {
+        action: "status_snapshot",
+        status: "no-session",
+        summary: "no active session",
+      })
+    ) {
+      return;
+    }
+
+    if (globalFlags.format === "quiet") {
+      process.stdout.write("no-session\n");
+      return;
+    }
+
+    process.stdout.write("session: -\n");
+    process.stdout.write(`agent: ${agent.agentCommand}\n`);
+    process.stdout.write("pid: -\n");
+    process.stdout.write("status: no-session\n");
+    process.stdout.write("model: -\n");
+    process.stdout.write("mode: -\n");
+    process.stdout.write("uptime: -\n");
+    process.stdout.write("lastPromptTime: -\n");
+    return;
+  }
+
+  const health = await probeQueueOwnerHealth(record.acp-bridgeRecordId);
+  const statusState = resolveStatusState(record, health);
+  const running = statusState === "running";
+  const dead = statusState === "dead";
+  const payload = {
+    sessionId: record.acp-bridgeRecordId,
+    agentCommand: record.agentCommand,
+    pid: health.pid ?? record.pid ?? null,
+    status: statusState,
+    model: record.acp-bridge?.current_model_id ?? null,
+    mode: record.acp-bridge?.current_mode_id ?? null,
+    availableModels: record.acp-bridge?.available_models ?? null,
+    uptime: running ? (formatUptime(record.agentStartedAt) ?? null) : null,
+    lastPromptTime: record.lastPromptAt ?? null,
+    exitCode: running ? null : (record.lastAgentExitCode ?? null),
+    signal: running ? null : (record.lastAgentExitSignal ?? null),
+    ...agentSessionIdPayload(record.agentSessionId),
+  };
+
+  if (
+    emitJsonResult(globalFlags.format, {
+      action: "status_snapshot",
+      status: running ? "alive" : statusState,
+      pid: payload.pid ?? undefined,
+      summary: statusSummary(statusState),
+      model: payload.model ?? undefined,
+      mode: payload.mode ?? undefined,
+      availableModels: payload.availableModels ?? undefined,
+      uptime: payload.uptime ?? undefined,
+      lastPromptTime: payload.lastPromptTime ?? undefined,
+      exitCode: dead ? (payload.exitCode ?? undefined) : undefined,
+      signal: dead ? (payload.signal ?? undefined) : undefined,
+      acp-bridgeRecordId: record.acp-bridgeRecordId,
+      acp-bridgeSessionId: record.acpSessionId,
+      agentSessionId: record.agentSessionId,
+    })
+  ) {
+    return;
+  }
+
+  if (globalFlags.format === "quiet") {
+    process.stdout.write(`${payload.status}\n`);
+    return;
+  }
+
+  process.stdout.write(`session: ${payload.sessionId}\n`);
+  if ("agentSessionId" in payload) {
+    process.stdout.write(`agentSessionId: ${payload.agentSessionId}\n`);
+  }
+  process.stdout.write(`agent: ${payload.agentCommand}\n`);
+  process.stdout.write(`pid: ${payload.pid ?? "-"}\n`);
+  process.stdout.write(`status: ${payload.status}\n`);
+  process.stdout.write(`model: ${payload.model ?? "-"}\n`);
+  process.stdout.write(`mode: ${payload.mode ?? "-"}\n`);
+  process.stdout.write(`uptime: ${payload.uptime ?? "-"}\n`);
+  process.stdout.write(`lastPromptTime: ${payload.lastPromptTime ?? "-"}\n`);
+  if (dead) {
+    process.stdout.write(`exitCode: ${payload.exitCode ?? "-"}\n`);
+    process.stdout.write(`signal: ${payload.signal ?? "-"}\n`);
+  }
+}
+
+export function registerStatusCommand(
+  parent: Command,
+  explicitAgentName: string | undefined,
+  config: ResolvedAcpBridgeConfig,
+  description: string,
+): void {
+  const statusCommand = parent.command("status").description(description);
+  addSessionNameOption(statusCommand);
+  statusCommand.action(async function (this: Command, flags: StatusFlags) {
+    await handleStatus(explicitAgentName, flags, this, config);
+  });
+}
