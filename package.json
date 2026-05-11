@@ -82,7 +82,7 @@
     "zod": "^4.4.2"
   },
   "devDependencies": {
-    "@types/node": "^25.6.0",
+    "@types/node": "^25.6.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/react-test-renderer": "^19.1.0",
@@ -95,15 +95,15 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "markdownlint-cli2": "^0.22.1",
-    "oxfmt": "^0.47.0",
-    "oxlint": "^1.62.0",
+    "oxfmt": "^0.48.0",
+    "oxlint": "^1.63.0",
     "oxlint-tsgolint": "^0.22.1",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
-    "react-test-renderer": "^19.2.5",
-    "tsdown": "^0.21.10",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-test-renderer": "^19.2.6",
+    "tsdown": "^0.22.0",
     "typescript": "^6.0.3",
-    "vite": "^8.0.10",
+    "vite": "^8.0.11",
     "ws": "^8.20.0"
   },
   "lint-staged": {
